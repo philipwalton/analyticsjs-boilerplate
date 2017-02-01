@@ -1,0 +1,8 @@
+# OS or Editor folders
+.DS_Store
+
+# Node stuff
+node_modules
+
+# Compiled files
+build
