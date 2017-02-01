@@ -1,6 +1,6 @@
 const main = () => {
   // Load and initialize all analytics code lazily, so its non-blocking.
-  System.import('./analytics').then((analytics) => analytics.init());
+  import('./analytics').then((analytics) => analytics.init());
 
   // Initate all other code paths here...
 };
