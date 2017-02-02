@@ -63,6 +63,26 @@ export const init = () => {
 
 
 /**
+ * Tracks a JavaScript error with optional fields object overrides.
+ * This function is exported so it can be used in other parts of the codebase.
+ * E.g.:
+ *
+ *    `fetch('/api.json').catch(trackError);`
+ *
+ * @param {Error|undefined} error
+ * @param {Object=} fieldsObj
+ */
+export const trackError = (error, fieldsObj = {}) => {
+  ga('send', 'event', Object.assign({
+    eventCategory: 'Script',
+    eventAction: 'error',
+    eventLabel: (error && error.stack) || NULL_VALUE,
+    nonInteraction: true,
+  }, fieldsObj));
+};
+
+
+/**
  * Creates the trackers and sets the default transport and tracking
  * version fields. In non-production environments it also logs hits.
  */
@@ -83,25 +103,18 @@ const trackErrors = () => {
   // `window.__e.q`, as specified in `index.html`.
   const loadErrorEvents = window.__e && window.__e.q || [];
 
-  /**
-   * @param {!ErrorEvent} event
-   */
-  const trackErrorEvent = (event) => {
-    ga('send', 'event', {
-      eventCategory: 'Script',
-      eventAction: 'uncaught error',
-      eventLabel: (event.error && event.error.stack) || NULL_VALUE,
-      nonInteraction: true,
-    });
-  };
+  // Use a different eventAction for uncaught errors.
+  const fieldsObj = {eventAction: 'uncaught error'};
 
   // Replay any stored load error events.
   for (let event of loadErrorEvents) {
-    trackErrorEvent(event);
+    trackError(event.error, fieldsObj);
   }
 
   // Add a new listener to track event immediately.
-  window.addEventListener('error', trackErrorEvent);
+  window.addEventListener('error', (event) => {
+    trackError(event.error, fieldsObj);
+  });
 };
 
 
@@ -137,7 +150,7 @@ const trackCustomDimensions = () => {
       model.set(dimensions.VISIBILITY_STATE, document.visibilityState, true);
 
       const page = model.get('page') || (location.pathname + location.search);
-      model.set(dimensions.PAGE_PATH, page, true),
+      model.set(dimensions.PAGE_PATH, page, true);
 
       originalBuildHitTask(model);
     });
