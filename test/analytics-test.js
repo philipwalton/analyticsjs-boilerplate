@@ -108,7 +108,7 @@ describe('analytics', () => {
       });
     });
 
-    it('sends a performance event with pageload timing data', () => {
+    it('sends a performance event with navigation timing data', () => {
       analytics.init();
 
       // Wait for a pageview and a perf event.
@@ -117,11 +117,15 @@ describe('analytics', () => {
 
         assert(/^\d+$/.test(hits[1].cm1));
         assert(/^\d+$/.test(hits[1].cm2));
-        assert(hits[1].cm2 >= hits[1].cm1);
+        assert(/^\d+$/.test(hits[1].cm3));
+        assert(parseInt(hits[1].cm2) >= parseInt(hits[1].cm1));
+        assert(parseInt(hits[1].cm3) >= parseInt(hits[1].cm2));
+
 
         // Assert custom metrics aren't set on the pageview.
         assert.strictEqual(hits[0].cm1, undefined);
         assert.strictEqual(hits[0].cm2, undefined);
+        assert.strictEqual(hits[0].cm3, undefined);
       });
     });
 

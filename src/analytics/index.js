@@ -44,8 +44,9 @@ const dimensions = {
  * A maping between custom dimension names and their indexes.
  */
 const metrics = {
-  DOM_LOAD_TIME: 'metric1',
-  WINDOW_LOAD_TIME: 'metric2',
+  RESPONSE_END_TIME: 'metric1',
+  DOM_LOAD_TIME: 'metric2',
+  WINDOW_LOAD_TIME: 'metric3',
 };
 
 
@@ -58,7 +59,7 @@ export const init = () => {
   trackErrors();
   trackCustomDimensions();
   sendInitialPageview();
-  sendPageloadMetrics();
+  sendNavigationTimingMetrics();
 };
 
 
@@ -170,7 +171,7 @@ const sendInitialPageview = () => {
  * Gets the DOM and window load times and sends them as custom metrics to
  * Google Analytics via an event hit.
  */
-const sendPageloadMetrics = () => {
+const sendNavigationTimingMetrics = () => {
   // Only track performance in supporting browsers.
   if (!(window.performance && window.performance.timing)) return;
 
@@ -182,14 +183,15 @@ const sendPageloadMetrics = () => {
     // https://www.w3.org/2010/webperf/track/actions/23
     if (!navStart) return;
 
-    const domLoaded = nt.domContentLoadedEventStart - navStart;
-    const windowLoaded = nt.loadEventStart - navStart;
+    const responseEnd = Math.round(nt.responseEnd - navStart);
+    const domLoaded = Math.round(nt.domContentLoadedEventStart - navStart);
+    const windowLoaded = Math.round(nt.loadEventStart - navStart);
 
     ga('send', 'event', {
-      eventCategory: 'Performance',
+      eventCategory: 'Navigation Timing',
       eventAction: 'track',
-      eventLabel: 'pageload',
       nonInteraction: true,
+      [metrics.RESPONSE_END_TIME]: responseEnd,
       [metrics.DOM_LOAD_TIME]: domLoaded,
       [metrics.WINDOW_LOAD_TIME]: windowLoaded,
     });
