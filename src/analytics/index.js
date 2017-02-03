@@ -35,8 +35,7 @@ const dimensions = {
   HIT_TIME: 'dimension5',
   HIT_TYPE: 'dimension6',
   HIT_SOURCE: 'dimension7',
-  PAGE_PATH: 'dimension8',
-  VISIBILITY_STATE: 'dimension9',
+  VISIBILITY_STATE: 'dimension8',
 };
 
 
@@ -149,9 +148,6 @@ const trackCustomDimensions = () => {
       model.set(dimensions.HIT_TIME, String(+new Date), true);
       model.set(dimensions.HIT_TYPE, model.get('hitType'), true);
       model.set(dimensions.VISIBILITY_STATE, document.visibilityState, true);
-
-      const page = model.get('page') || (location.pathname + location.search);
-      model.set(dimensions.PAGE_PATH, page, true);
 
       originalBuildHitTask(model);
     });

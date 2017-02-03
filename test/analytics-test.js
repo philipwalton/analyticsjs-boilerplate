@@ -75,8 +75,7 @@ describe('analytics', () => {
         assert(hits[0].cd5 > (new Date - 1000));
         assert(hits[0].cd6 === 'pageview');
         assert(hits[0].cd7 === 'pageload');
-        assert.strictEqual(hits[0].cd8, location.pathname + location.search);
-        assert.strictEqual(hits[0].cd9, document.visibilityState);
+        assert.strictEqual(hits[0].cd8, document.visibilityState);
 
         assert.strictEqual(hits[1].cd1, '1');
         assert(CLIENT_ID_PATTERN.test(hits[1].cd2));
@@ -85,8 +84,7 @@ describe('analytics', () => {
         assert(hits[1].cd5 > (new Date - 1000));
         assert(hits[1].cd6 == 'event');
         assert(hits[1].cd7 == '(not set)');
-        assert.strictEqual(hits[1].cd8, location.pathname + location.search);
-        assert.strictEqual(hits[1].cd9, document.visibilityState);
+        assert.strictEqual(hits[1].cd8, document.visibilityState);
 
         // Assert window IDs are the same.
         assert.strictEqual(hits[0].cd3, hits[1].cd3);
