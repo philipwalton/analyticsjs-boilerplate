@@ -1,5 +1,9 @@
 const main = () => {
-  // Load and initialize all analytics code lazily, so its non-blocking.
+  // Load custom tracking code lazily, so it's non-blocking.
+  // Replace `./analytics` with either of the following if using one of the
+  // other variations:
+  //   - `./analytics/autotrack`
+  //   - `./analytics/multiple-trackers`
   import('./analytics').then((analytics) => analytics.init());
 
   // Initate all other code paths here...

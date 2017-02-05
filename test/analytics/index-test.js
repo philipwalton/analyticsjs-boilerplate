@@ -1,7 +1,7 @@
 import assert from 'assert';
 import sinon from 'sinon';
 import qs from 'querystring';
-import * as analytics from '../src/analytics';
+import * as analytics from '../../src/analytics';
 
 
 const CLIENT_ID_PATTERN = /^\d+\.\d+$/;
@@ -49,15 +49,15 @@ describe('analytics', () => {
         // Just get the events.
         const hits = getHits((params) => params.ec == 'Script');
 
-        assert.equal(hits[0].ec, 'Script');
-        assert.equal(hits[0].ea, 'uncaught error');
+        assert.strictEqual(hits[0].ec, 'Script');
+        assert.strictEqual(hits[0].ea, 'uncaught error');
         assert(hits[0].el.length);
 
-        assert.equal(hits[1].ec, 'Script');
-        assert.equal(hits[1].ea, 'uncaught error');
-        assert(hits[1].el === '(not set)');
+        assert.strictEqual(hits[1].ec, 'Script');
+        assert.strictEqual(hits[1].ea, 'uncaught error');
+        assert.strictEqual(hits[1].el, '(not set)');
 
-        delete window.__e;
+        window.__e.q = null;
       });
     });
 
@@ -73,8 +73,8 @@ describe('analytics', () => {
         assert(UUID_PATTERN.test(hits[0].cd3));
         assert(UUID_PATTERN.test(hits[0].cd4));
         assert(hits[0].cd5 > (new Date - 1000));
-        assert(hits[0].cd6 === 'pageview');
-        assert(hits[0].cd7 === 'pageload');
+        assert.strictEqual(hits[0].cd6, 'pageview');
+        assert.strictEqual(hits[0].cd7, 'pageload');
         assert.strictEqual(hits[0].cd8, document.visibilityState);
 
         assert.strictEqual(hits[1].cd1, '1');
@@ -82,8 +82,8 @@ describe('analytics', () => {
         assert(UUID_PATTERN.test(hits[1].cd3));
         assert(UUID_PATTERN.test(hits[1].cd4));
         assert(hits[1].cd5 > (new Date - 1000));
-        assert(hits[1].cd6 == 'event');
-        assert(hits[1].cd7 == '(not set)');
+        assert.strictEqual(hits[1].cd6, 'event');
+        assert.strictEqual(hits[1].cd7, '(not set)');
         assert.strictEqual(hits[1].cd8, document.visibilityState);
 
         // Assert window IDs are the same.
@@ -101,8 +101,8 @@ describe('analytics', () => {
       return waitForHits(2).then(() => {
         const hits = getHits();
 
-        assert(hits[0].t === 'pageview');
-        assert(hits[0].cd7 === 'pageload');
+        assert.strictEqual(hits[0].t, 'pageview');
+        assert.strictEqual(hits[0].cd7, 'pageload');
       });
     });
 
