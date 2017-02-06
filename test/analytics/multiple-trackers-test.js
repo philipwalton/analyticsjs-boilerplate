@@ -143,18 +143,20 @@ describe('analytics/multiple-trackers', () => {
       return waitForHits(3).then(() => {
         const hits = getHits();
 
-        // Assert cleanUrlTracker did its thing.
         assert.strictEqual(hits[0].tid, 'UA-XXXXX-Y');
         assert.strictEqual(hits[0].dp, '/test');
         assert.strictEqual(hits[0].cd9, 'foo=bar');
+        assert.strictEqual(hits[0]._au, '121'); // 100100001
 
         assert.strictEqual(hits[1].tid, 'UA-XXXXX-Z');
         assert.strictEqual(hits[1].dp, '/test');
         assert.strictEqual(hits[1].cd9, 'foo=bar');
+        assert.strictEqual(hits[1]._au, '361'); // 1101100001
 
         assert.strictEqual(hits[2].tid, 'UA-XXXXX-Z');
         assert.strictEqual(hits[2].dp, '/test');
         assert.strictEqual(hits[2].cd9, 'foo=bar');
+        assert.strictEqual(hits[2]._au, '361'); // 1101100001
 
         history.replaceState({}, null, originalLocation);
       });

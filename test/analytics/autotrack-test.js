@@ -112,11 +112,13 @@ describe('analytics/autotrack', () => {
       return waitForHits(2).then(() => {
         const hits = getHits();
 
-        // Assert cleanUrlTracker did its thing.
         assert.strictEqual(hits[0].dp, '/test');
         assert.strictEqual(hits[0].cd9, 'foo=bar');
+        assert.strictEqual(hits[0]._au, '361'); // 1101100001
+
         assert.strictEqual(hits[1].dp, '/test');
         assert.strictEqual(hits[1].cd9, 'foo=bar');
+        assert.strictEqual(hits[1]._au, '361'); // 1101100001
 
         history.replaceState({}, null, originalLocation);
       });
@@ -183,7 +185,6 @@ const waitForHits = (count) => {
       if (navigator.sendBeacon.callCount === count) {
         resolve();
       } else if (new Date - startTime > 2000) {
-        console.log(getHits());
         reject(new Error(`Timed out waiting for ${count} hits ` +
             `(${navigator.sendBeacon.callCount} hits received).`));
       } else {

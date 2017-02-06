@@ -76,7 +76,7 @@ const metrics = {
  *     `trackingId` fields.
  * @return {!Function} The proxied ga() function.
  */
-function createGaProxy(trackers) {
+const createGaProxy = (trackers) => {
   return (command, ...args) => {
     for (let {name} of trackers) {
       if (typeof command == 'function') {
@@ -213,9 +213,9 @@ const trackCustomDimensions = () => {
 /**
  * Requires select autotrack plugins and initializes each one with its
  * respective configuration options. As an example of using multiple
- * trackers, this function only requires the `maxScrollTracker` on the test
- * trackers, so you can ensure the data collected is relevant prior to
- * sending it to your production property.
+ * trackers, this function only requires the `maxScrollTracker` and
+ * `pageVisibilityTracker` plugins on the test trackers, so you can ensure the
+ * data collected is relevant prior to sending it to your production property.
  */
 const requireAutotrackPlugins = () => {
   gaAll('require', 'cleanUrlTracker', {
@@ -237,7 +237,7 @@ const requireAutotrackPlugins = () => {
     timeZone: 'America/Los_Angeles',
     fieldsObj: {[dimensions.HIT_SOURCE]: 'pageVisibilityTracker'},
   });
-  gaTest('require', 'urlChangeTracker', {
+  gaAll('require', 'urlChangeTracker', {
     fieldsObj: {[dimensions.HIT_SOURCE]: 'urlChangeTracker'},
   });
 };
@@ -310,9 +310,7 @@ const whenWindowLoaded = (callback) => {
  * @param {string} definition The definition string (e.g. 'dimension1').
  * @return {number} The definition index.
  */
-const getDefinitionIndex = (definition) => {
-  return +/\d+$/.exec(definition)[0];
-};
+const getDefinitionIndex = (definition) => +/\d+$/.exec(definition)[0];
 
 
 /**

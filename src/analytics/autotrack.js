@@ -266,9 +266,7 @@ const whenWindowLoaded = (callback) => {
  * @param {string} definition The definition string (e.g. 'dimension1').
  * @return {number} The definition index.
  */
-const getDefinitionIndex = (definition) => {
-  return +/\d+$/.exec(definition)[0];
-};
+const getDefinitionIndex = (definition) => +/\d+$/.exec(definition)[0]
 
 
 /**
