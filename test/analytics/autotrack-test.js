@@ -99,7 +99,7 @@ describe('analytics/autotrack', () => {
 
     it('includes select autotrack plugins', () => {
       const originalLocation = location.href;
-      history.replaceState({}, null, '/test/?foo=bar')
+      history.replaceState({}, null, '/test/?foo=bar');
       analytics.init();
 
       assert(window.gaplugins.CleanUrlTracker);

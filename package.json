@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "test": "eslint --fix src/index.js src/analytics/index.js test/*.js"
+    "test": "eslint --fix src/**/*.js test/**/*.js"
   },
   "repository": {
     "type": "git",
