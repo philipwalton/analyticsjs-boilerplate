@@ -178,22 +178,26 @@ const sendNavigationTimingMetrics = () => {
     const nt = performance.timing;
     const navStart = nt.navigationStart;
 
-    // Ignore cases where navStart is 0
-    // https://www.w3.org/2010/webperf/track/actions/23
-    if (!navStart) return;
-
     const responseEnd = Math.round(nt.responseEnd - navStart);
     const domLoaded = Math.round(nt.domContentLoadedEventStart - navStart);
     const windowLoaded = Math.round(nt.loadEventStart - navStart);
 
-    ga('send', 'event', {
-      eventCategory: 'Navigation Timing',
-      eventAction: 'track',
-      nonInteraction: true,
-      [metrics.RESPONSE_END_TIME]: responseEnd,
-      [metrics.DOM_LOAD_TIME]: domLoaded,
-      [metrics.WINDOW_LOAD_TIME]: windowLoaded,
-    });
+    // In some edge cases browsers return very obviously incorrect NT values,
+    // e.g. 0, negative, or future times. This validates values before sending.
+    const allValuesAreValid = (...values) => {
+      return values.every((value) => value > 0 && value < 1e6);
+    };
+
+    if (allValuesAreValid(responseEnd, domLoaded, windowLoaded)) {
+      ga('send', 'event', {
+        eventCategory: 'Navigation Timing',
+        eventAction: 'track',
+        nonInteraction: true,
+        [metrics.RESPONSE_END_TIME]: responseEnd,
+        [metrics.DOM_LOAD_TIME]: domLoaded,
+        [metrics.WINDOW_LOAD_TIME]: windowLoaded,
+      });
+    }
   });
 };
 
