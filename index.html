@@ -3,13 +3,21 @@
 <head>
   <meta charset="utf-8">
   <title>analytics.js boilerplate</title>
+
+  <!-- Adds an event listener to record uncaught errors. -->
   <script>
   addEventListener('error', window.__e=function f(e){f.q=f.q||[];f.q.push(e)});
   </script>
-  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+  <!-- Loads the debug version of anlaytics.js. Replace
+  `analytics_debug.js` with `analytics.js` when deploying to production. -->
+  <script async src="https://www.google-analytics.com/analytics_debug.js"></script>
 </head>
 <body>
   <h1>analytics.js boilerplate</h1>
+
+  <!-- Loads the main site bundle, which asynchronously loads the tracking
+  code after all critical site functionality is initialized. -->
   <script src="build/index.js"></script>
 </body>
 </html>
