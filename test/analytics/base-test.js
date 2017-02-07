@@ -1,7 +1,7 @@
 import assert from 'assert';
 import sinon from 'sinon';
 import qs from 'querystring';
-import * as analytics from '../../src/analytics';
+import * as analytics from '../../src/analytics/base';
 
 
 const CLIENT_ID_PATTERN = /^\d+\.\d+$/;
@@ -11,7 +11,7 @@ const UUID_PATTERN =
     /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[8-9a-b][\da-f]{3}-[\da-f]{12}$/;
 
 
-describe('analytics', () => {
+describe('analytics/base', () => {
   describe('init', () => {
     beforeEach(() => {
       // Ensure sendBeacon exists so that transport mechanism is always used.
