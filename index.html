@@ -4,17 +4,18 @@
   <meta charset="utf-8">
   <title>analytics.js boilerplate</title>
 
-  <!-- Adds an event listener to record uncaught errors. -->
-  <script>
-  addEventListener('error', window.__e=function f(e){f.q=f.q||[];f.q.push(e)});
-  </script>
+  <!-- Adds an event listener to capture uncaught errors. -->
+  <script>addEventListener('error', window.__e=function f(e){f.q=f.q||[];f.q.push(e)});</script>
 
-  <!-- Loads the debug version of anlaytics.js. Replace
-  `analytics_debug.js` with `analytics.js` when deploying to production. -->
+  <!-- Loads the debug version of analytics.js. **Important!** replace
+  `analytics_debug.js` with `analytics.js` before deploying to production. -->
   <script async src="https://www.google-analytics.com/analytics_debug.js"></script>
 </head>
 <body>
   <h1>analytics.js boilerplate</h1>
+  <p>Open up your browser's developer console to see the
+  <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/debugging">
+  debug output</a> from <code>analytic_debug.js</code>.</p>
 
   <!-- Loads the main site bundle, which asynchronously loads the tracking
   code after all critical site functionality is initialized. -->

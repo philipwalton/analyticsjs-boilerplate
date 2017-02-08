@@ -2,7 +2,7 @@
 
 Best practices for implementing analytics.js on modern websites.
 
-For an in-depth explanation of all the features used in this boilerplate (as well as how to report on them), see my article: [The Google Analytics Setup I Use on All My Websites](https://philipwalton.com/the-google-analytics-setup-i-use-on-all-my-websites)
+For an in-depth explanation of all the features used in this boilerplate (as well as how to report on them), see my article: [The Google Analytics Setup I Use on All My Websites](https://philipwalton.com/articles/the-google-analytics-setup-i-use-on-every-site-i-build/)
 
 ## Boilerplate versions
 
