@@ -92,7 +92,8 @@ const createGaProxy = (trackers) => {
 
 
 /**
- * Command queue proxies.
+ * Command queue proxies
+ * (exported so they can be called by other modules if needed).
  */
 export const gaAll = createGaProxy(ALL_TRACKERS);
 export const gaTest = createGaProxy(TEST_TRACKERS);
@@ -255,54 +256,41 @@ const sendInitialPageview = () => {
  * Gets the DOM and window load times and sends them as custom metrics to
  * Google Analytics via an event hit.
  */
-const sendNavigationTimingMetrics = () => {
-  // Only track performance in supporting browsers.
-  if (!(window.performance && window.performance.timing)) return;
+ const sendNavigationTimingMetrics = () => {
+   // Only track performance in supporting browsers.
+   if (!(window.performance && window.performance.timing)) return;
 
-  whenWindowLoaded(() => {
-    const nt = performance.timing;
-    const navStart = nt.navigationStart;
+   // If the window hasn't loaded, run this function after the `load` event.
+   if (document.readyState != 'complete') {
+     window.addEventListener('load', sendNavigationTimingMetrics);
+     return;
+   }
 
-    const responseEnd = Math.round(nt.responseEnd - navStart);
-    const domLoaded = Math.round(nt.domContentLoadedEventStart - navStart);
-    const windowLoaded = Math.round(nt.loadEventStart - navStart);
+   const nt = performance.timing;
+   const navStart = nt.navigationStart;
 
-    // In some edge cases browsers return very obviously incorrect NT values,
-    // e.g. 0, negative, or future times. This validates values before sending.
-    const allValuesAreValid = (...values) => {
-      return values.every((value) => value > 0 && value < 1e6);
-    };
+   const responseEnd = Math.round(nt.responseEnd - navStart);
+   const domLoaded = Math.round(nt.domContentLoadedEventStart - navStart);
+   const windowLoaded = Math.round(nt.loadEventStart - navStart);
 
-    if (allValuesAreValid(responseEnd, domLoaded, windowLoaded)) {
-      // Only sends perf events via the test tracker.
-      gaTest('send', 'event', {
-        eventCategory: 'Navigation Timing',
-        eventAction: 'track',
-        nonInteraction: true,
-        [metrics.RESPONSE_END_TIME]: responseEnd,
-        [metrics.DOM_LOAD_TIME]: domLoaded,
-        [metrics.WINDOW_LOAD_TIME]: windowLoaded,
-      });
-    }
-  });
-};
+   // In some edge cases browsers return very obviously incorrect NT values,
+   // e.g. 0, negative, or future times. This validates values before sending.
+   const allValuesAreValid = (...values) => {
+     return values.every((value) => value > 0 && value < 1e6);
+   };
 
+   if (allValuesAreValid(responseEnd, domLoaded, windowLoaded)) {
+     gaTest('send', 'event', {
+       eventCategory: 'Navigation Timing',
+       eventAction: 'track',
+       nonInteraction: true,
+       [metrics.RESPONSE_END_TIME]: responseEnd,
+       [metrics.DOM_LOAD_TIME]: domLoaded,
+       [metrics.WINDOW_LOAD_TIME]: windowLoaded,
+     });
+   }
+ };
 
-/**
- * Runs a callback when the load event fires (or immediately if the window
- * is already loaded).
- * @param {Function} callback
- */
-const whenWindowLoaded = (callback) => {
-  if (document.readyState == 'complete') {
-    callback();
-  } else {
-    window.addEventListener('load', function f() {
-      window.removeEventListener('load', f);
-      callback();
-    });
-  }
-};
 
 
 /**
