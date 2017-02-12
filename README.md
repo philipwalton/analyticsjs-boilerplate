@@ -8,7 +8,7 @@ For an in-depth explanation of all the features used in this boilerplate (as wel
 
 ## Boilerplate versions
 
-### [`analytics/base.js`](/src/analytics/index.js)
+### [`analytics/base.js`](/src/analytics/base.js)
 
 The base boilerplate extends the [default tracking snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/#alternative_async_tracking_snippet) and includes the following features:
 
@@ -19,11 +19,11 @@ The base boilerplate extends the [default tracking snippet](https://developers.g
 
 ### [`analytics/autotrack.js`](/src/analytics/autotrack.js)
 
-The autotrack boilerplate builds on top the base boilerplate and includes [select autotrack plugins](https://philipwalton.com/the-google-analytics-setup-i-use-on-all-my-websites#autotrack-plugins)
+The autotrack boilerplate builds on top the base boilerplate and includes [select autotrack plugins](https://philipwalton.com/articles/the-google-analytics-setup-i-use-on-every-site-i-build/#using-autotrack-plugins)
 
-### [`analytics/multiple-tracker.js`](/src/analytics/multiple-tracker.js)
+### [`analytics/multiple-trackers.js`](/src/analytics/multiple-trackers.js)
 
-The multiple-trackers boilerplate builds on the autotrack boilerplate and includes support for using [multiple trackers](https://philipwalton.com/the-google-analytics-setup-i-use-on-all-my-websites#testing-your-implementation-using-multiple-trackers).
+The multiple-trackers boilerplate builds on the autotrack boilerplate and includes support for using [multiple trackers](https://philipwalton.com/articles/the-google-analytics-setup-i-use-on-every-site-i-build/#testing-your-implementation).
 
 ## Running the boilerplate locally
 
