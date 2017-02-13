@@ -29,7 +29,7 @@ The multiple-trackers boilerplate builds on the autotrack boilerplate and includ
 
 analytics.js boilerplate uses [webpack](https://webpack.js.org/) to compile the source and [webpack-dev-server](https://github.com/webpack/webpack-dev-server) to run it locally.
 
-To install the dependencies and load the boilerplate in a brower, run the following commands:
+To install the dependencies and load the boilerplate in a browser, run the following commands:
 
 ```sh
 npm install
