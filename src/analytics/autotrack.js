@@ -232,7 +232,7 @@ const sendNavigationTimingMetrics = () => {
   // In some edge cases browsers return very obviously incorrect NT values,
   // e.g. 0, negative, or future times. This validates values before sending.
   const allValuesAreValid = (...values) => {
-    return values.every((value) => value > 0 && value < 1e6);
+    return values.every((value) => value > 0 && value < 6e6);
   };
 
   if (allValuesAreValid(responseEnd, domLoaded, windowLoaded)) {
