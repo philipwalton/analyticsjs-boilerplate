@@ -17,6 +17,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules\/(?!(autotrack|dom-utils))/,
         query: {
           presets: [['es2015', {'modules': false}]],
           plugins: ['dynamic-import-system-import'],
