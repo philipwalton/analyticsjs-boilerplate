@@ -4,6 +4,7 @@
   "description": "Examples and best practices for using analytics.js",
   "main": "index.js",
   "scripts": {
+    "build": "webpack -p",
     "start": "webpack-dev-server",
     "test": "eslint --fix src/**/*.js test/**/*.js"
   },
