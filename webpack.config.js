@@ -13,14 +13,18 @@ module.exports = {
   },
   devtool: '#source-map',
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules\/(?!(autotrack|dom-utils))/,
-        query: {
-          presets: [['es2015', {'modules': false}]],
-          plugins: ['dynamic-import-system-import'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['es2015', {'modules': false}]],
+            plugins: ['dynamic-import-system-import'],
+          },
+        },
+        resource: {
+          test: /\.js$/,
+          exclude: /node_modules\/(?!(autotrack|dom-utils))/,
         },
       },
     ],
