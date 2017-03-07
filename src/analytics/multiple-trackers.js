@@ -293,7 +293,6 @@ const sendInitialPageview = () => {
  };
 
 
-
 /**
  * Accepts a custom dimension or metric and returns it's numerical index.
  * @param {string} definition The definition string (e.g. 'dimension1').
