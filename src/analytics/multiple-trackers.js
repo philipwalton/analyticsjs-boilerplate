@@ -137,14 +137,14 @@ const createTrackers = () => {
  *
  *    `fetch('/api.json').catch(trackError);`
  *
- * @param {Error|undefined} error
+ * @param {Error|undefined} err
  * @param {Object=} fieldsObj
  */
-export const trackError = (error, fieldsObj = {}) => {
+export const trackError = (err, fieldsObj = {}) => {
   gaAll('send', 'event', Object.assign({
-    eventCategory: 'Script',
-    eventAction: 'error',
-    eventLabel: (error && error.stack) || NULL_VALUE,
+    eventCategory: 'Error',
+    eventAction: err.name,
+    eventLabel: `${err.message}\n${err.stack || '(no stack trace)'}`,
     nonInteraction: true,
   }, fieldsObj));
 };
@@ -159,8 +159,8 @@ const trackErrors = () => {
   // `window.__e.q`, as specified in `index.html`.
   const loadErrorEvents = window.__e && window.__e.q || [];
 
-  // Use a different eventAction for uncaught errors.
-  const fieldsObj = {eventAction: 'uncaught error'};
+  // Use a different eventCategory for uncaught errors.
+  const fieldsObj = {eventCategory: 'Uncaught Error'};
 
   // Replay any stored load error events.
   for (let event of loadErrorEvents) {

@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: {
     'index': './src/index.js',
-    'test': ['babel-polyfill', ...glob.sync('./test/*-test.js')],
+    'test': ['babel-polyfill', ...glob.sync('./test/analytics/*-test.js')],
   },
   output: {
     path: path.resolve(__dirname, 'build'),

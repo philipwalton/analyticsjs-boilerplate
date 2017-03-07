@@ -18,7 +18,7 @@ describe('analytics/multiple-trackers', () => {
       if (!navigator.sendBeacon) navigator.sendBeacon = () => true;
 
       localStorage.clear();
-      sinon.stub(navigator, 'sendBeacon', () => true);
+      sinon.stub(navigator, 'sendBeacon').returns(true);
     });
 
     afterEach(() => {
@@ -43,43 +43,44 @@ describe('analytics/multiple-trackers', () => {
       });
     });
 
-
     it('reports any errors that occured before tracker creation', () => {
       // Creates two fake error events, one with an error object like would
       // appear in most browsers, and one without, like would appear in IE9.
-      window.__e.q = [{error: new Error('foo')}, {}];
+      window.__e.q = [
+        {error: new TypeError('foo')},
+        {error: {name: 'ReferenceError', message: 'zomg!'}},
+      ];
 
       analytics.init();
 
       // Waits for two pageviews, four script errors, and a single perf event.
       return waitForHits(7).then(() => {
         // Just get the events.
-        const hits = getHits((params) => params.ec == 'Script');
+        const hits = getHits((params) => params.ec == 'Uncaught Error');
 
         assert.equal(hits[0].tid, 'UA-XXXXX-Y');
-        assert.equal(hits[0].ec, 'Script');
-        assert.equal(hits[0].ea, 'uncaught error');
+        assert.equal(hits[0].ec, 'Uncaught Error');
+        assert.equal(hits[0].ea, 'TypeError');
         assert(hits[0].el.length);
 
         assert.equal(hits[1].tid, 'UA-XXXXX-Z');
-        assert.equal(hits[1].ec, 'Script');
-        assert.equal(hits[1].ea, 'uncaught error');
+        assert.equal(hits[1].ec, 'Uncaught Error');
+        assert.equal(hits[1].ea, 'TypeError');
         assert(hits[1].el.length);
 
         assert.equal(hits[2].tid, 'UA-XXXXX-Y');
-        assert.equal(hits[2].ec, 'Script');
-        assert.equal(hits[2].ea, 'uncaught error');
-        assert(hits[2].el === '(not set)');
+        assert.equal(hits[2].ec, 'Uncaught Error');
+        assert.equal(hits[2].ea, 'ReferenceError');
+        assert(hits[2].el === 'zomg!\n(no stack trace)');
 
         assert.equal(hits[3].tid, 'UA-XXXXX-Z');
-        assert.equal(hits[3].ec, 'Script');
-        assert.equal(hits[3].ea, 'uncaught error');
-        assert(hits[3].el === '(not set)');
+        assert.equal(hits[3].ec, 'Uncaught Error');
+        assert.equal(hits[3].ea, 'ReferenceError');
+        assert(hits[3].el === 'zomg!\n(no stack trace)');
 
         window.__e.q = null;
       });
     });
-
 
     it('sends custom dimensions with every hit', () => {
       analytics.init();
@@ -232,6 +233,7 @@ const waitForHits = (count) => {
       if (navigator.sendBeacon.callCount === count) {
         resolve();
       } else if (new Date - startTime > 2000) {
+        console.log(getHits());
         reject(new Error(`Timed out waiting for ${count} hits ` +
             `(${navigator.sendBeacon.callCount} hits received).`));
       } else {

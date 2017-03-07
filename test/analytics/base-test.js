@@ -17,7 +17,7 @@ describe('analytics/base', () => {
       // Ensure sendBeacon exists so that transport mechanism is always used.
       if (!navigator.sendBeacon) navigator.sendBeacon = () => true;
 
-      sinon.stub(navigator, 'sendBeacon', () => true);
+      sinon.stub(navigator, 'sendBeacon').returns(true);
     });
 
     afterEach(() => {
@@ -40,22 +40,25 @@ describe('analytics/base', () => {
     it('reports any errors that occured before tracker creation', () => {
       // Creates two fake error events, one with an error object like would
       // appear in most browsers, and one without, like would appear in IE9.
-      window.__e.q = [{error: new Error('foo')}, {}];
+      window.__e.q = [
+        {error: new TypeError('foo')},
+        {error: {name: 'ReferenceError', message: 'zomg!'}},
+      ];
 
       analytics.init();
 
       // Waits for a pageview, two script errors, and a perf event.
       return waitForHits(4).then(() => {
         // Just get the events.
-        const hits = getHits((params) => params.ec == 'Script');
+        const hits = getHits((params) => params.ec == 'Uncaught Error');
 
-        assert.strictEqual(hits[0].ec, 'Script');
-        assert.strictEqual(hits[0].ea, 'uncaught error');
+        assert.strictEqual(hits[0].ec, 'Uncaught Error');
+        assert.strictEqual(hits[0].ea, 'TypeError');
         assert(hits[0].el.length);
 
-        assert.strictEqual(hits[1].ec, 'Script');
-        assert.strictEqual(hits[1].ea, 'uncaught error');
-        assert.strictEqual(hits[1].el, '(not set)');
+        assert.strictEqual(hits[1].ec, 'Uncaught Error');
+        assert.strictEqual(hits[1].ea, 'ReferenceError');
+        assert.strictEqual(hits[1].el, 'zomg!\n(no stack trace)');
 
         window.__e.q = null;
       });
