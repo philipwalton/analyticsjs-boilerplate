@@ -71,7 +71,6 @@ describe('analytics/autotrack', () => {
       // Wait for a pageview and a perf event.
       return waitForHits(2).then(() => {
         const hits = getHits();
-        console.log(hits);
 
         assert.strictEqual(hits[0].cd1, '1');
         assert(CLIENT_ID_PATTERN.test(hits[0].cd2));

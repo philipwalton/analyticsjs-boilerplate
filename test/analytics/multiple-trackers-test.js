@@ -233,7 +233,6 @@ const waitForHits = (count) => {
       if (navigator.sendBeacon.callCount === count) {
         resolve();
       } else if (new Date - startTime > 2000) {
-        console.log(getHits());
         reject(new Error(`Timed out waiting for ${count} hits ` +
             `(${navigator.sendBeacon.callCount} hits received).`));
       } else {
