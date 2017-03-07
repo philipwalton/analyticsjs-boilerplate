@@ -147,8 +147,9 @@ const trackCustomDimensions = () => {
   ga((tracker) => {
     const originalBuildHitTask = tracker.get('buildHitTask');
     tracker.set('buildHitTask', (model) => {
+      const qt = model.get('queueTime') || 0;
+      model.set(dimensions.HIT_TIME, String(new Date - qt), true);
       model.set(dimensions.HIT_ID, uuid(), true);
-      model.set(dimensions.HIT_TIME, String(+new Date), true);
       model.set(dimensions.HIT_TYPE, model.get('hitType'), true);
       model.set(dimensions.VISIBILITY_STATE, document.visibilityState, true);
 
