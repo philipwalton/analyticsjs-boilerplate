@@ -1,6 +1,6 @@
 {
   "name": "analyticsjs-boilerplate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Examples and best practices for using analytics.js",
   "main": "index.js",
   "scripts": {
