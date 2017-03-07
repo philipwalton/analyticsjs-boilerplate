@@ -129,6 +129,20 @@ describe('analytics/multiple-trackers', () => {
       });
     });
 
+    it('accounts for the queueTime field in hit time calculations', () => {
+      analytics.init();
+      ga('prod.send', 'pageview', {queueTime: 60 * 60 * 1000});
+      ga('test.send', 'pageview', {queueTime: 60 * 60 * 1000});
+
+      // Wait for two pageviews, a perf event, and then two more pageviews.
+      return waitForHits(5).then(() => {
+        const hits = getHits();
+
+        assert(+hits[3].cd5 < +hits[0].cd5);
+        assert(+hits[4].cd5 < +hits[0].cd5);
+      });
+    });
+
     it('includes select autotrack plugins', () => {
       const originalLocation = location.href;
       history.replaceState({}, null, '/test/?foo=bar');
@@ -233,7 +247,6 @@ const waitForHits = (count) => {
       if (navigator.sendBeacon.callCount === count) {
         resolve();
       } else if (new Date - startTime > 2000) {
-        console.log(getHits());
         reject(new Error(`Timed out waiting for ${count} hits ` +
             `(${navigator.sendBeacon.callCount} hits received).`));
       } else {

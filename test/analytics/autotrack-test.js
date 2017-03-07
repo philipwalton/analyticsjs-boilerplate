@@ -71,7 +71,6 @@ describe('analytics/autotrack', () => {
       // Wait for a pageview and a perf event.
       return waitForHits(2).then(() => {
         const hits = getHits();
-        console.log(hits);
 
         assert.strictEqual(hits[0].cd1, '1');
         assert(CLIENT_ID_PATTERN.test(hits[0].cd2));
@@ -98,6 +97,18 @@ describe('analytics/autotrack', () => {
 
         // Assert hit IDs are *not* the same.
         assert.notStrictEqual(hits[0].cd4, hits[1].cd4);
+      });
+    });
+
+    it('accounts for the queueTime field in hit time calculations', () => {
+      analytics.init();
+      ga('send', 'pageview', {queueTime: 60 * 60 * 1000});
+
+      // Wait for a pageview, a perf event, and another pageview
+      return waitForHits(3).then(() => {
+        const hits = getHits();
+
+        assert(+hits[2].cd5 < +hits[0].cd5);
       });
     });
 

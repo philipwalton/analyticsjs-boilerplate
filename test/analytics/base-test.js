@@ -97,6 +97,18 @@ describe('analytics/base', () => {
       });
     });
 
+    it('accounts for the queueTime field in hit time calculations', () => {
+      analytics.init();
+      ga('send', 'pageview', {queueTime: 60 * 60 * 1000});
+
+      // Wait for a pageview, a perf event, and another pageview
+      return waitForHits(3).then(() => {
+        const hits = getHits();
+
+        assert(+hits[2].cd5 < +hits[0].cd5);
+      });
+    });
+
     it('sends an initial pageview with the hit source', () => {
       analytics.init();
 
