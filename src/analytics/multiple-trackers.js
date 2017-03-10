@@ -43,7 +43,7 @@ const NULL_VALUE = '(not set)';
 
 
 /**
- * A maping between custom dimension names and their indexes.
+ * A mapping between custom dimension names and their indexes.
  */
 const dimensions = {
   TRACKING_VERSION: 'dimension1',
@@ -59,7 +59,7 @@ const dimensions = {
 
 
 /**
- * A maping between custom dimension names and their indexes.
+ * A mapping between custom metric names and their indexes.
  */
 const metrics = {
   RESPONSE_END_TIME: 'metric1',
