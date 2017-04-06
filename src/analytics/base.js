@@ -78,7 +78,7 @@ export const init = () => {
 export const trackError = (err = {}, fieldsObj = {}) => {
   ga('send', 'event', Object.assign({
     eventCategory: 'Error',
-    eventAction: err.name,
+    eventAction: err.name || '(no error name)',
     eventLabel: `${err.message}\n${err.stack || '(no stack trace)'}`,
     nonInteraction: true,
   }, fieldsObj));
