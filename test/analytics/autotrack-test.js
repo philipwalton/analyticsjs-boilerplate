@@ -199,6 +199,9 @@ describe('analytics/autotrack', () => {
         const hits = getHits();
 
         assert.strictEqual(hits[1].t, 'event');
+        assert.strictEqual(hits[1].ec, 'Navigation Timing');
+        assert.strictEqual(hits[1].ea, 'track');
+        assert.strictEqual(hits[1].el, '(not set)');
         assert.strictEqual(hits[1].ni, '1');
       });
     });

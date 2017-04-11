@@ -293,6 +293,7 @@ const sendNavigationTimingMetrics = () => {
     gaProd('send', 'event', {
       eventCategory: 'Navigation Timing',
       eventAction: 'track',
+      eventLabel: NULL_VALUE,
       nonInteraction: true,
       [metrics.RESPONSE_END_TIME]: responseEnd,
       [metrics.DOM_LOAD_TIME]: domLoaded,
