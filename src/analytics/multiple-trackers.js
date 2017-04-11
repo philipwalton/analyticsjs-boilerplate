@@ -28,6 +28,13 @@ const ALL_TRACKERS = [
 
 
 /**
+ * Just the trackers with a name matching `prod`. Using an array filter
+ * allows you to have more than one prod tracker if needed.
+ */
+const PROD_TRACKERS = ALL_TRACKERS.filter(({name}) => /prod/.test(name));
+
+
+/**
  * Just the trackers with a name matching `test`. Using an array filter
  * allows you to have more than one test tracker if needed.
  */
@@ -67,6 +74,7 @@ const metrics = {
   WINDOW_LOAD_TIME: 'metric3',
   PAGE_VISIBLE: 'metric4',
   MAX_SCROLL_PERCENTAGE: 'metric5',
+  PAGE_LOADS: 'metric6',
 };
 
 
@@ -96,6 +104,7 @@ const createGaProxy = (trackers) => {
  * (exported so they can be called by other modules if needed).
  */
 export const gaAll = createGaProxy(ALL_TRACKERS);
+export const gaProd = createGaProxy(PROD_TRACKERS);
 export const gaTest = createGaProxy(TEST_TRACKERS);
 
 
@@ -111,7 +120,6 @@ export const init = () => {
   trackErrors();
   trackCustomDimensions();
   requireAutotrackPlugins();
-  sendInitialPageview();
   sendNavigationTimingMetrics();
 };
 
@@ -240,7 +248,9 @@ const requireAutotrackPlugins = () => {
   gaAll('require', 'outboundLinkTracker', {
     events: ['click', 'contextmenu'],
   });
-  gaTest('require', 'pageVisibilityTracker', {
+  gaAll('require', 'pageVisibilityTracker', {
+    sendInitialPageview: true,
+    pageLoadsMetricIndex: getDefinitionIndex(metrics.PAGE_LOADS),
     visibleMetricIndex: getDefinitionIndex(metrics.PAGE_VISIBLE),
     sessionTimeout: 30,
     timeZone: 'America/Los_Angeles',
@@ -249,14 +259,6 @@ const requireAutotrackPlugins = () => {
   gaAll('require', 'urlChangeTracker', {
     fieldsObj: {[dimensions.HIT_SOURCE]: 'urlChangeTracker'},
   });
-};
-
-
-/**
- * Sends the initial pageview to Google Analytics.
- */
-const sendInitialPageview = () => {
-  gaAll('send', 'pageview', {[dimensions.HIT_SOURCE]: 'pageload'});
 };
 
 
@@ -288,7 +290,7 @@ const sendNavigationTimingMetrics = () => {
   };
 
   if (allValuesAreValid(responseEnd, domLoaded, windowLoaded)) {
-    gaTest('send', 'event', {
+    gaProd('send', 'event', {
       eventCategory: 'Navigation Timing',
       eventAction: 'track',
       nonInteraction: true,

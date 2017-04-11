@@ -57,6 +57,7 @@ const metrics = {
   WINDOW_LOAD_TIME: 'metric3',
   PAGE_VISIBLE: 'metric4',
   MAX_SCROLL_PERCENTAGE: 'metric5',
+  PAGE_LOADS: 'metric6',
 };
 
 
@@ -72,7 +73,6 @@ export const init = () => {
   trackErrors();
   trackCustomDimensions();
   requireAutotrackPlugins();
-  sendInitialPageview();
   sendNavigationTimingMetrics();
 };
 
@@ -197,22 +197,15 @@ const requireAutotrackPlugins = () => {
     events: ['click', 'contextmenu'],
   });
   ga('require', 'pageVisibilityTracker', {
+    sendInitialPageview: true,
+    pageLoadsMetricIndex: getDefinitionIndex(metrics.PAGE_LOADS),
     visibleMetricIndex: getDefinitionIndex(metrics.PAGE_VISIBLE),
-    sessionTimeout: 30,
     timeZone: 'America/Los_Angeles',
     fieldsObj: {[dimensions.HIT_SOURCE]: 'pageVisibilityTracker'},
   });
   ga('require', 'urlChangeTracker', {
     fieldsObj: {[dimensions.HIT_SOURCE]: 'urlChangeTracker'},
   });
-};
-
-
-/**
- * Sends the initial pageview to Google Analytics.
- */
-const sendInitialPageview = () => {
-  ga('send', 'pageview', {[dimensions.HIT_SOURCE]: 'pageload'});
 };
 
 

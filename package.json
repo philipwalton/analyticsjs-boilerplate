@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/philipwalton/analytics-boilerplate#readme",
   "devDependencies": {
-    "autotrack": "^2.0.1",
+    "autotrack": "^2.3.2",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.3.2",
@@ -34,7 +34,7 @@
     "eslint-config-google": "^0.7.1",
     "glob": "^7.1.1",
     "mocha": "^3.2.0",
-    "sinon": "^2.0.0-pre.2",
+    "sinon": "^2.1.0",
     "source-map-support": "^0.4.11",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"

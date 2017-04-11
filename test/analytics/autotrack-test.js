@@ -11,19 +11,32 @@ const UUID_PATTERN =
     /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[8-9a-b][\da-f]{3}-[\da-f]{12}$/;
 
 
+const HIT_TIME_DIMENSION = 'cd5';
+
+
+let sentHits;
+
+
 describe('analytics/autotrack', () => {
   describe('init', () => {
     beforeEach(() => {
+      sentHits = [];
+
       // Ensure sendBeacon exists so that transport mechanism is always used.
       if (!navigator.sendBeacon) navigator.sendBeacon = () => true;
 
       localStorage.clear();
-      sinon.stub(navigator, 'sendBeacon').returns(true);
+
+      sinon.stub(navigator, 'sendBeacon').callsFake((url, body) => {
+        sentHits.push(qs.parse(body));
+      }).callThrough();
     });
 
     afterEach(() => {
       ga('remove');
       navigator.sendBeacon.restore();
+
+      sentHits = [];
     });
 
     it('creates a new tracker with the proper default fields', (done) => {
@@ -78,9 +91,10 @@ describe('analytics/autotrack', () => {
         assert(UUID_PATTERN.test(hits[0].cd4));
         assert(hits[0].cd5 > (new Date - 1000));
         assert.strictEqual(hits[0].cd6, 'pageview');
-        assert.strictEqual(hits[0].cd7, 'pageload');
+        assert.strictEqual(hits[0].cd7, 'pageVisibilityTracker');
         assert.strictEqual(hits[0].cd8, document.visibilityState);
         assert.strictEqual(hits[0].cd9, '(not set)');
+        assert.strictEqual(hits[0].cm6, '1');
 
         assert.strictEqual(hits[1].cd1, '1');
         assert(CLIENT_ID_PATTERN.test(hits[1].cd2));
@@ -102,13 +116,18 @@ describe('analytics/autotrack', () => {
 
     it('accounts for the queueTime field in hit time calculations', () => {
       analytics.init();
-      ga('send', 'pageview', {queueTime: 60 * 60 * 1000});
+      ga('send', 'event', {queueTime: 60 * 60 * 1000});
 
-      // Wait for a pageview, a perf event, and another pageview
+      // Wait for a pageview, a perf event, and then another event, which
+      // should be ordered first once hit time is considered.
       return waitForHits(3).then(() => {
         const hits = getHits();
 
-        assert(+hits[2].cd5 < +hits[0].cd5);
+        assert.strictEqual(hits[0].t, 'event');
+        assert(hits[0].qt > 0);
+        assert.strictEqual(hits[1].t, 'pageview');
+        assert.strictEqual(hits[2].t, 'event');
+        assert.strictEqual(hits[2].ec, 'Navigation Timing');
       });
     });
 
@@ -147,7 +166,7 @@ describe('analytics/autotrack', () => {
         const hits = getHits();
 
         assert.strictEqual(hits[0].t, 'pageview');
-        assert.strictEqual(hits[0].cd7, 'pageload');
+        assert.strictEqual(hits[0].cd7, 'pageVisibilityTracker');
       });
     });
 
@@ -188,7 +207,9 @@ describe('analytics/autotrack', () => {
 
 
 const getHits = (filter) => {
-  const hits = navigator.sendBeacon.args.map((args) => qs.parse(args[1]));
+  const hits = sentHits.sort((a, b) => {
+    return a[HIT_TIME_DIMENSION] - b[HIT_TIME_DIMENSION];
+  });
   return filter ? hits.filter(filter) : hits;
 };
 
@@ -197,11 +218,11 @@ const waitForHits = (count) => {
   const startTime = +new Date;
   return new Promise((resolve, reject) => {
     (function f() {
-      if (navigator.sendBeacon.callCount === count) {
+      if (sentHits.length === count) {
         resolve();
       } else if (new Date - startTime > 2000) {
         reject(new Error(`Timed out waiting for ${count} hits ` +
-            `(${navigator.sendBeacon.callCount} hits received).`));
+            `(${sentHits.length} hits received).`));
       } else {
         setTimeout(() => f(count), 100);
       }
