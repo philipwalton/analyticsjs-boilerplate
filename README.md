@@ -73,7 +73,7 @@ Make sure the metric index number in the admin panel matches up with the number 
 | Name                 | Script reference      | Scope | Formatting Type |
 | :-------------       | :-------------        | :---- | :-------------- |
 | Response End Time    | RESPONSE_END_TIME     | Hit   | Integer         |
-| DOM Load Time        | DOM_LOAD_TIME         | User  | Integer         |
+| DOM Load Time        | DOM_LOAD_TIME         | Hit   | Integer         |
 | Window Load Time     | WINDOW_LOAD_TIME      | Hit   | Integer         |
 | Page Visible         | PAGE_VISIBLE          | Hit   | Integer         |
 | Max Scroll Percentage| MAX_SCROLL_PERCENTAGE | Hit   | Integer         |
