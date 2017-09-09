@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philipwalton/analytics-boilerplate.git"
+    "url": "git+https://github.com/philipwalton/analyticsjs-boilerplate.git"
   },
   "author": {
     "name": "Philip Walton",
@@ -19,9 +19,9 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/philipwalton/analytics-boilerplate/issues"
+    "url": "https://github.com/philipwalton/analyticsjs-boilerplate/issues"
   },
-  "homepage": "https://github.com/philipwalton/analytics-boilerplate#readme",
+  "homepage": "https://github.com/philipwalton/analyticsjs-boilerplate#readme",
   "devDependencies": {
     "autotrack": "^2.3.2",
     "babel-core": "^6.23.1",
